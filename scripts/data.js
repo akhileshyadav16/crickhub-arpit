@@ -41,18 +41,14 @@
     // 4. Default based on environment
     if (!apiBase) {
         if (isProduction) {
-            // Production: Always use production domain, not preview URLs
-            const currentOrigin = window.location.origin;
-            // If on preview deployment, use production domain
-            if (currentOrigin.includes('.vercel.app') && !currentOrigin.includes('crickhubarpit.vercel.app')) {
-                // This is a preview deployment - use production domain
-                apiBase = 'https://crickhubarpit.vercel.app/api';
-                console.log('[CrickHub] Preview deployment detected, using production API:', apiBase);
-            } else {
-                // Use same origin
-                apiBase = currentOrigin + '/api';
-                console.log('[CrickHub] Using same-origin API:', apiBase);
-            }
+            // Production: Frontend on Vercel, Backend on Railway
+            // CRICKHUB_API_BASE should be set in Vercel environment variables
+            console.error('[CrickHub] API base URL not configured!');
+            console.error('[CrickHub] Set CRICKHUB_API_BASE in Vercel environment variables.');
+            console.error('[CrickHub] Go to: Vercel Dashboard → Settings → Environment Variables');
+            console.error('[CrickHub] Add: CRICKHUB_API_BASE = https://your-backend.railway.app/api');
+            // Don't use placeholder - force user to configure properly
+            apiBase = null; // Will cause errors until configured
         } else {
             // Development: Use localhost
             apiBase = 'http://localhost:8000/api';
@@ -64,15 +60,25 @@
         apiBase = apiBase.replace(/\/$/, '') + '/api';
     }
     
-    window.CRICKHUB_CONFIG = Object.assign(
-        {
-            apiBase: apiBase,
-            useMockData: false, // Always false - all data comes from database
-        },
-        window.CRICKHUB_CONFIG || {}
-    );
+    if (!apiBase) {
+        console.error('[CrickHub] Cannot initialize - API base URL not configured!');
+        window.CRICKHUB_CONFIG = {
+            apiBase: null,
+            useMockData: false,
+            error: 'API base URL not configured. Set CRICKHUB_API_BASE in Vercel environment variables.'
+        };
+    } else {
+        window.CRICKHUB_CONFIG = Object.assign(
+            {
+                apiBase: apiBase,
+                useMockData: false, // Always false - all data comes from database
+            },
+            window.CRICKHUB_CONFIG || {}
+        );
+        
+        console.log('[CrickHub] API Base URL:', window.CRICKHUB_CONFIG.apiBase);
+    }
     
-    console.log('[CrickHub] API Base URL:', window.CRICKHUB_CONFIG.apiBase);
     console.log('[CrickHub] Environment:', isProduction ? 'Production' : 'Development');
 })();
 

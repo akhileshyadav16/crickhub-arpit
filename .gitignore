@@ -104,6 +104,9 @@ yarn.lock
 # Build artifacts (keep source files)
 # build.js output is written to HTML files, which are committed
 
+# Vercel API directory (generated wrapper)
+# Note: api/index.php is committed as it's needed for Vercel
+
 # ============================================
 # Build & Distribution
 # ============================================
