@@ -41,10 +41,18 @@
     // 4. Default based on environment
     if (!apiBase) {
         if (isProduction) {
-            // Production: Use same domain for API (Vercel same project)
+            // Production: Always use production domain, not preview URLs
             const currentOrigin = window.location.origin;
-            apiBase = currentOrigin + '/api';
-            console.log('[CrickHub] Using same-origin API:', apiBase);
+            // If on preview deployment, use production domain
+            if (currentOrigin.includes('.vercel.app') && !currentOrigin.includes('crickhubarpit.vercel.app')) {
+                // This is a preview deployment - use production domain
+                apiBase = 'https://crickhubarpit.vercel.app/api';
+                console.log('[CrickHub] Preview deployment detected, using production API:', apiBase);
+            } else {
+                // Use same origin
+                apiBase = currentOrigin + '/api';
+                console.log('[CrickHub] Using same-origin API:', apiBase);
+            }
         } else {
             // Development: Use localhost
             apiBase = 'http://localhost:8000/api';

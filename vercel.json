@@ -2,6 +2,11 @@
   "version": 2,
   "buildCommand": "npm run build",
   "outputDirectory": ".",
+  "functions": {
+    "backend/public/index.php": {
+      "runtime": "@vercel/php@3.0.0"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -18,7 +23,7 @@
   ],
   "headers": [
     {
-      "source": "/(.*)",
+      "source": "/api/(.*)",
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
