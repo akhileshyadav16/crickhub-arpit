@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CrickHub | Cricket Analytics Portal</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css" />
+    <link rel="stylesheet" href="styles/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <header class="site-header">
+        <div class="container header-container">
+            <div class="brand">
+                <img src="assets/logo.svg" alt="CrickHub" class="brand-logo" />
+                <span class="brand-name">CrickHub</span>
+            </div>
+            <nav class="site-nav" aria-label="Primary navigation">
+                <a href="#players">Players</a>
+                <a href="#matches">Matches</a>
+                <a href="#insights">Insights</a>
+                <a href="admin.html" class="admin-link">Admin Panel</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-copy">
+                    <h1>The Ultimate Cricket Intelligence Hub</h1>
+                    <p>
+                        CrickHub brings real-time match updates, historical records, and deep player analytics together in a single, intuitive dashboard.
+                    </p>
+                    <div class="hero-actions">
+                        <a href="#players" class="btn btn-primary">Explore Players</a>
+                        <a href="#insights" class="btn btn-secondary">View Insights</a>
+                    </div>
+                </div>
+                <div class="hero-visual" role="presentation">
+                    <img src="https://images.pexels.com/photos/399187/pexels-photo-399187.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=320&w=480" alt="Cricket Stadium" />
+                </div>
+            </div>
+        </section>
+
+        <section id="players" class="section players">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Player Statistics</h2>
+                    <div class="filters">
+                        <label for="playerSearch" class="sr-only">Search players</label>
+                        <input id="playerSearch" type="search" placeholder="Search players" />
+                        <select id="teamFilter">
+                            <option value="">All Teams</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="playerCards" class="player-grid" role="list"></div>
+                <div id="playerEmptyState" class="empty-state-card" hidden>
+                    <div class="empty-state-icon">📊</div>
+                    <h3>No Players Available</h3>
+                    <p id="playerEmptyMessage">No players found in the database.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="matches" class="section matches">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Recent Matches</h2>
+                    <div class="filters">
+                        <label for="matchSearch" class="sr-only">Search matches</label>
+                        <input id="matchSearch" type="search" placeholder="Search matches" />
+                    </div>
+                </div>
+                <div class="matches-table-wrapper">
+                    <table class="matches-table">
+                        <thead>
+                            <tr>
+                                <th scope="col">Match</th>
+                                <th scope="col">Result</th>
+                                <th scope="col">Summary</th>
+                            </tr>
+                        </thead>
+                        <tbody id="matchRows"></tbody>
+                    </table>
+                </div>
+                <div id="matchEmptyState" class="empty-state-card" hidden>
+                    <div class="empty-state-icon">🏏</div>
+                    <h3>No Matches Available</h3>
+                    <p id="matchEmptyMessage">No matches found in the database.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="insights" class="section insights">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Performance Insights</h2>
+                    <p class="section-description">Interactive charts showcasing key batting metrics across the league.</p>
+                </div>
+                <div class="insights-grid">
+                    <article class="insight-card">
+                        <header>
+                            <h3>Runs vs. Average</h3>
+                        </header>
+                        <canvas id="runsAverageChart" height="280" aria-label="Runs versus batting average chart"></canvas>
+                    </article>
+                    <article class="insight-card">
+                        <header>
+                            <h3>Centuries and Fifties</h3>
+                        </header>
+                        <canvas id="hundredsFiftiesChart" height="280" aria-label="Hundreds and fifties chart"></canvas>
+                    </article>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-container">
+            <div>
+                <p>© <span id="currentYear"></span> CrickHub. All rights reserved.</p>
+                <p style="margin-top: 0.5rem; font-size: 0.9rem; opacity: 0.9;">Made by : Arpit Yadav</p>
+            </div>
+            <nav aria-label="Footer navigation">
+                <a href="#players">Players</a>
+                <a href="#matches">Matches</a>
+                <a href="#insights">Insights</a>
+                <a href="admin.html">Admin</a>
+            </nav>
+        </div>
+    </footer>
+
+    <div id="playerModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="playerModalTitle" hidden>
+        <div class="modal-content">
+            <button type="button" class="modal-close" data-modal-close aria-label="Close player details">×</button>
+            <article class="modal-body" id="playerModalBody"></article>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-3gJwYp4pXp2U5QmX3aQZRlAZvM51x5YyZJe+Z1qz0+8=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.6/dist/chart.umd.min.js"></script>
+    <script>
+        // Verify Chart.js is loaded
+        (function() {
+            if (typeof Chart !== 'undefined' || typeof window.Chart !== 'undefined') {
+                console.log('[CrickHub] Chart.js loaded successfully');
+                window.CRICKHUB_CHART_READY = true;
+            } else {
+                console.warn('[CrickHub] Chart.js not immediately available, will retry...');
+                // Try again after a short delay
+                setTimeout(function() {
+                    if (typeof Chart !== 'undefined' || typeof window.Chart !== 'undefined') {
+                        console.log('[CrickHub] Chart.js loaded (delayed)');
+                        window.CRICKHUB_CHART_READY = true;
+                    } else {
+                        console.error('[CrickHub] Chart.js failed to load from CDN');
+                    }
+                }, 500);
+            }
+        })();
+    </script>
+    <script src="scripts/data.js"></script>
+    <script src="scripts/main.js"></script>
+</body>
+</html>
+
+
+

@@ -1,0 +1,190 @@
+# CrickHub - Git Ignore File
+
+# ============================================
+# Environment & Configuration Files
+# ============================================
+.env
+.env.local
+.env.*.local
+.env.production
+.env.development
+*.env
+backend/.env
+backend/.env.local
+
+# ============================================
+# PHP Related
+# ============================================
+# Composer
+/vendor/
+composer.phar
+composer.lock
+
+# PHP Cache
+*.cache
+*.php~
+*.swp
+*.swo
+*~
+
+# PHP Error Logs
+*.log
+php_errors.log
+error_log
+backend/*.log
+
+# ============================================
+# IDE & Editor Files
+# ============================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# PhpStorm / IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# ============================================
+# OS Files
+# ============================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# ============================================
+# Node.js (if using npm packages)
+# ============================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+.pnpm-debug.log*
+
+# ============================================
+# Build & Distribution
+# ============================================
+dist/
+build/
+*.min.js
+*.min.css
+*.map
+
+# ============================================
+# Database Files
+# ============================================
+*.sql.bak
+*.sql.backup
+*.db
+*.sqlite
+*.sqlite3
+database.sql
+dump.sql
+*.dump
+
+# ============================================
+# Session & Cache Files
+# ============================================
+sessions/
+cache/
+tmp/
+temp/
+*.tmp
+*.temp
+
+# ============================================
+# Testing & Coverage
+# ============================================
+.phpunit.result.cache
+coverage/
+.nyc_output/
+*.coverage
+
+# ============================================
+# Deployment & CI/CD
+# ============================================
+.vercel/
+.railway/
+.railway.json
+deploy.sh
+deploy.ps1
+
+# ============================================
+# Backup Files
+# ============================================
+*.bak
+*.backup
+*.old
+*.orig
+*_backup
+*_old
+
+# ============================================
+# Documentation Build
+# ============================================
+docs/_build/
+site/
+
+# ============================================
+# Miscellaneous
+# ============================================
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+*.7z
+
+# Security
+*.pem
+*.key
+*.cert
+*.crt
+secrets/
+.secrets
+
+# Local development
+local/
+localhost/
+*.local
+

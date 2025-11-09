@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrickHub API Connection Test</title>
+    <style>
+        body {
+            font-family: system-ui, sans-serif;
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+        }
+        .test-result {
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 8px;
+        }
+        .success { background: #d1fae5; color: #065f46; }
+        .error { background: #fee2e2; color: #991b1b; }
+        .info { background: #dbeafe; color: #1e40af; }
+        button {
+            padding: 0.75rem 1.5rem;
+            background: #0b5ed7;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+        button:hover { background: #0a4cb4; }
+        pre { background: #f3f4f6; padding: 1rem; border-radius: 8px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🔌 CrickHub API Connection Test</h1>
+    
+    <div class="test-result info">
+        <strong>Protocol:</strong> <span id="protocol"></span><br>
+        <strong>API Base:</strong> <span id="apiBase"></span>
+    </div>
+
+    <button onclick="testConnection()">Test API Connection</button>
+    
+    <div id="results"></div>
+
+    <script src="scripts/data.js"></script>
+    <script>
+        const config = window.CRICKHUB_CONFIG || {};
+        const apiBase = (config.apiBase || 'http://localhost:8000/api').replace(/\/$/, '');
+        
+        document.getElementById('protocol').textContent = window.location.protocol;
+        document.getElementById('apiBase').textContent = apiBase;
+
+        async function testConnection() {
+            const results = document.getElementById('results');
+            results.innerHTML = '';
+
+            // Test 1: Protocol check
+            if (window.location.protocol === 'file:') {
+                results.innerHTML += `
+                    <div class="test-result error">
+                        <strong>❌ Protocol Error</strong><br>
+                        You're opening this file directly (file://). Please serve it via HTTP:<br>
+                        <code>npx live-server --port=8001</code> or use VS Code Live Server
+                    </div>
+                `;
+                return;
+            }
+
+            // Test 2: Health endpoint
+            try {
+                const healthRes = await fetch(`${apiBase}/health`, {
+                    method: 'GET',
+                    credentials: 'include'
+                });
+                const healthData = await healthRes.json();
+                results.innerHTML += `
+                    <div class="test-result success">
+                        <strong>✅ Health Check Passed</strong><br>
+                        <pre>${JSON.stringify(healthData, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                results.innerHTML += `
+                    <div class="test-result error">
+                        <strong>❌ Health Check Failed</strong><br>
+                        ${error.message}<br>
+                        <strong>Make sure:</strong><br>
+                        1. Backend is running: <code>cd backend && php -S localhost:8000 public/index.php</code><br>
+                        2. No firewall blocking localhost:8000
+                    </div>
+                `;
+                return;
+            }
+
+            // Test 3: Players endpoint
+            try {
+                const playersRes = await fetch(`${apiBase}/players`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const playersData = await playersRes.json();
+                results.innerHTML += `
+                    <div class="test-result success">
+                        <strong>✅ Players API Working</strong><br>
+                        Found ${playersData.data?.length || 0} players
+                    </div>
+                `;
+            } catch (error) {
+                results.innerHTML += `
+                    <div class="test-result error">
+                        <strong>❌ Players API Failed</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+
+            // Test 4: Teams endpoint
+            try {
+                const teamsRes = await fetch(`${apiBase}/teams`, {
+                    method: 'GET',
+                    credentials: 'include',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                const teamsData = await teamsRes.json();
+                results.innerHTML += `
+                    <div class="test-result success">
+                        <strong>✅ Teams API Working</strong><br>
+                        Found ${teamsData.data?.length || 0} teams
+                    </div>
+                `;
+            } catch (error) {
+                results.innerHTML += `
+                    <div class="test-result error">
+                        <strong>❌ Teams API Failed</strong><br>
+                        ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Auto-test on load
+        window.addEventListener('load', () => {
+            if (window.location.protocol !== 'file:') {
+                testConnection();
+            }
+        });
+    </script>
+</body>
+</html>
+

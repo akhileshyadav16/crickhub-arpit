@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CrickHub Admin | Manage Cricket Data</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/normalize.css@8.0.1/normalize.css" />
+    <link rel="stylesheet" href="styles/admin.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+    <header class="admin-header">
+        <div class="container header-container">
+            <a href="index.html" class="brand">
+                <img src="assets/logo.svg" alt="CrickHub" class="brand-logo" />
+                <span class="brand-name">CrickHub Admin</span>
+            </a>
+            <nav>
+                <a href="#players" class="active">Players</a>
+                <a href="#teams">Teams</a>
+                <a href="#matches">Matches</a>
+            </nav>
+            <div class="user-menu" role="group" aria-label="Account actions">
+                <span class="user-role" id="currentRole">Guest</span>
+                <button type="button" class="btn btn-secondary" id="loginButton">Log in</button>
+                <button type="button" class="btn btn-secondary" id="logoutButton" hidden>Log out</button>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="players" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <h1>Players</h1>
+                        <p>Manage player roster, statistics, and profiles.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" data-open-modal="playerForm" data-requires-role="admin">Add Player</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Team</th>
+                                <th>Role</th>
+                                <th>Matches</th>
+                                <th>Runs</th>
+                                <th>Average</th>
+                                <th>SR</th>
+                                <th>100s</th>
+                                <th>50s</th>
+                                <th>4s</th>
+                                <th>6s</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminPlayersBody">
+                            <!-- Empty state will be rendered here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="teams" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <h2>Teams</h2>
+                        <p>Add, edit, and archive domestic or league teams.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" data-open-modal="teamForm" data-requires-role="admin">Add Team</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>City</th>
+                                <th>Coach</th>
+                                <th>Captain</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminTeamsBody">
+                            <!-- Empty state will be rendered here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <section id="matches" class="section">
+            <div class="container">
+                <div class="section-header">
+                    <div>
+                        <h2>Matches</h2>
+                        <p>Schedule fixtures, capture scores, and publish results.</p>
+                    </div>
+                    <button type="button" class="btn btn-primary" data-open-modal="matchForm" data-requires-role="admin">Add Match</button>
+                </div>
+                <div class="table-wrapper">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Match</th>
+                                <th>Venue</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Result</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminMatchesBody">
+                            <!-- Empty state will be rendered here by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="playerForm" hidden>
+        <div class="modal-content">
+            <header>
+                <h3>Add Player</h3>
+                <button type="button" class="modal-close" data-modal-close>×</button>
+            </header>
+            <form class="modal-body" data-entity="player">
+                <div class="form-grid">
+                    <label>
+                        <span>Name</span>
+                        <input type="text" name="name" placeholder="Ex: Virat Kohli" required />
+                    </label>
+                    <label>
+                        <span>Team</span>
+                        <select name="team_id" data-populate="teams" required>
+                            <option value="">Select team</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Role</span>
+                        <select name="role" required>
+                            <option value="">Select role</option>
+                            <option value="Batter">Batter</option>
+                            <option value="Bowler">Bowler</option>
+                            <option value="All-rounder">All-rounder</option>
+                            <option value="Wicketkeeper Batter">Wicketkeeper Batter</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Matches</span>
+                        <input type="number" name="matches" min="0" />
+                    </label>
+                    <label>
+                        <span>Runs</span>
+                        <input type="number" name="runs" min="0" />
+                    </label>
+                    <label>
+                        <span>Average</span>
+                        <input type="number" step="0.01" name="average" min="0" />
+                    </label>
+                    <label>
+                        <span>Strike Rate</span>
+                        <input type="number" step="0.01" name="strike_rate" min="0" />
+                    </label>
+                    <label>
+                        <span>100s</span>
+                        <input type="number" name="hundreds" min="0" />
+                    </label>
+                    <label>
+                        <span>50s</span>
+                        <input type="number" name="fifties" min="0" />
+                    </label>
+                    <label>
+                        <span>4s</span>
+                        <input type="number" name="fours" min="0" />
+                    </label>
+                    <label>
+                        <span>6s</span>
+                        <input type="number" name="sixes" min="0" />
+                    </label>
+                </div>
+                <label>
+                    <span>Short Bio</span>
+                    <textarea name="bio" rows="3" placeholder="Career highlights, achievements, etc."></textarea>
+                </label>
+                <footer class="form-actions">
+                    <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Player</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="teamForm" hidden>
+        <div class="modal-content">
+            <header>
+                <h3>Add Team</h3>
+                <button type="button" class="modal-close" data-modal-close>×</button>
+            </header>
+            <form class="modal-body" data-entity="team">
+                <div class="form-grid">
+                    <label>
+                        <span>Team Name</span>
+                        <input type="text" name="name" placeholder="Ex: Chennai Super Kings" required />
+                    </label>
+                    <label>
+                        <span>City</span>
+                        <input type="text" name="city" placeholder="Ex: Chennai" />
+                    </label>
+                    <label>
+                        <span>Coach</span>
+                        <input type="text" name="coach" placeholder="Ex: Stephen Fleming" />
+                    </label>
+                    <label>
+                        <span>Captain</span>
+                        <input type="text" name="captain" placeholder="Ex: Ruturaj Gaikwad" />
+                    </label>
+                    <label>
+                        <span>Founded</span>
+                        <input type="number" name="founded" placeholder="2008" min="1800" max="2100" />
+                    </label>
+                </div>
+                <footer class="form-actions">
+                    <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Team</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal" id="matchForm" hidden>
+        <div class="modal-content">
+            <header>
+                <h3>Add Match</h3>
+                <button type="button" class="modal-close" data-modal-close>×</button>
+            </header>
+            <form class="modal-body" data-entity="match">
+                <div class="form-grid">
+                    <label>
+                        <span>Match Title</span>
+                        <input type="text" name="title" placeholder="Ex: RCB vs MI" required />
+                    </label>
+                    <label>
+                        <span>Home Team</span>
+                        <select name="home_team_id" data-populate="teams">
+                            <option value="">Select team</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Away Team</span>
+                        <select name="away_team_id" data-populate="teams">
+                            <option value="">Select team</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Venue</span>
+                        <input type="text" name="venue" placeholder="Ex: Wankhede Stadium" />
+                    </label>
+                    <label>
+                        <span>Date</span>
+                        <input type="date" name="match_date" />
+                    </label>
+                    <label>
+                        <span>Status</span>
+                        <select name="status" required>
+                            <option value="Scheduled">Scheduled</option>
+                            <option value="Completed">Completed</option>
+                            <option value="Abandoned">Abandoned</option>
+                        </select>
+                    </label>
+                </div>
+                <label>
+                    <span>Result</span>
+                    <input type="text" name="result" placeholder="Winner, margin, etc." />
+                </label>
+                <label>
+                    <span>Summary</span>
+                    <textarea name="summary" rows="3" placeholder="Match highlights and key moments"></textarea>
+                </label>
+                <footer class="form-actions">
+                    <button type="button" class="btn btn-secondary" data-modal-close>Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Match</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <div class="auth-overlay" id="authOverlay" hidden>
+        <form class="login-panel" id="loginForm" autocomplete="off">
+            <h2>Administrator Login</h2>
+            <p class="login-description">Sign in with your CrickHub credentials to manage data.</p>
+            <label>
+                <span>Email</span>
+                <input type="email" name="email" placeholder="admin@crickhub.local" required />
+            </label>
+            <label>
+                <span>Password</span>
+                <input type="password" name="password" placeholder="••••••••" required />
+            </label>
+            <p class="login-hint">Guest access? Use <code>viewer@crickhub.local</code> / <code>viewer123</code>.</p>
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" id="cancelLogin">Cancel</button>
+                <button type="submit" class="btn btn-primary">Login</button>
+            </div>
+            <p class="login-error" id="loginError" hidden></p>
+        </form>
+    </div>
+
+    <footer class="site-footer" style="background-color: #0f172a; color: white; padding: 2rem 0; margin-top: 3rem;">
+        <div class="container" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+            <div>
+                <p style="margin: 0;">© <span id="adminCurrentYear"></span> CrickHub Admin. All rights reserved.</p>
+                <p style="margin: 0.5rem 0 0 0; font-size: 0.9rem; opacity: 0.9;">Made by : Arpit Yadav</p>
+            </div>
+            <nav style="display: flex; gap: 1rem;">
+                <a href="index.html" style="color: white; text-decoration: none; padding: 0.5rem 0.75rem; border-radius: 999px; transition: background-color 0.2s;">Home</a>
+            </nav>
+        </div>
+    </footer>
+
+    <script>
+        // Set current year in admin footer
+        document.getElementById('adminCurrentYear').textContent = new Date().getFullYear();
+    </script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-3gJwYp4pXp2U5QmX3aQZRlAZvM51x5YyZJe+Z1qz0+8=" crossorigin="anonymous"></script>
+    <script src="scripts/data.js"></script>
+    <script src="scripts/admin.js"></script>
+</body>
+</html>
+
