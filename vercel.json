@@ -3,14 +3,14 @@
   "buildCommand": "npm run build",
   "outputDirectory": ".",
   "functions": {
-    "backend/public/index.php": {
+    "api/index.php": {
       "runtime": "@vercel/php@3.0.0"
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/backend/public/index.php"
+      "destination": "/api/index.php"
     },
     {
       "source": "/admin",
