@@ -28,10 +28,24 @@
 2. Select **"GitHub Repo"** → Choose your repository
 3. Configure:
    - **Root Directory**: `backend`
-   - **Start Command**: `php -S 0.0.0.0:$PORT public/index.php`
+   - **Start Command**: `php -S 0.0.0.0:$PORT -t public public/index.php`
    - **Healthcheck Path**: `/api/health`
+   - **Note**: If Railway detects Node.js, go to Settings → Deploy → and set the start command manually
 
-### 1.4 Set Environment Variables in Railway
+### 1.4 Configure Start Command (Important!)
+
+Railway might detect Node.js instead of PHP. Fix this:
+
+1. Go to backend service → **Settings** → **Deploy**
+2. Under **"Start Command"**, set:
+   ```
+   php -S 0.0.0.0:$PORT -t public public/index.php
+   ```
+3. Click **Save**
+
+**See `RAILWAY-PHP-FIX.md` for more details if Railway detects Node.js.**
+
+### 1.5 Set Environment Variables in Railway
 
 Go to backend service → **"Variables"** tab → Add:
 
@@ -47,7 +61,7 @@ CRICKHUB_ALLOWED_ORIGINS=https://crickhubarpit.vercel.app
 
 **Important:** Replace `crickhubarpit.vercel.app` with your actual Vercel domain!
 
-### 1.5 Run Database Migration
+### 1.6 Run Database Migration
 
 **Option A: Via Railway Dashboard**
 1. Go to MySQL service → **"Connect"** tab
@@ -63,7 +77,7 @@ railway link
 railway connect mysql < backend/schema-mysql.sql
 ```
 
-### 1.6 Get Backend URL
+### 1.7 Get Backend URL
 
 1. Go to backend service in Railway
 2. Copy the URL (e.g., `https://crickhub-api-production.up.railway.app`)
