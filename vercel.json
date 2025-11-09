@@ -1,6 +1,12 @@
 {
   "version": 2,
+  "buildCommand": "npm run build",
+  "outputDirectory": ".",
   "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "/backend/public/index.php"
+    },
     {
       "source": "/admin",
       "destination": "/admin.html"

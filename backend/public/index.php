@@ -12,9 +12,11 @@ $config = require __DIR__ . '/../config.php';
 
 // Log API request
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
-$uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
+$requestUri = $_SERVER['REQUEST_URI'] ?? '/';
+$uri = parse_url($requestUri, PHP_URL_PATH);
+// Vercel rewrites /api/* to this file, so REQUEST_URI should already be /api/*
 $origin = $_SERVER['HTTP_ORIGIN'] ?? 'none';
-error_log("[CrickHub API] {$method} {$uri} (Origin: {$origin})");
+error_log("[CrickHub API] {$method} {$uri} (Origin: {$origin}, REQUEST_URI: {$requestUri})");
 
 // Debug: Log full request details
 if ($method === 'DELETE' || $method === 'PUT' || $method === 'PATCH') {

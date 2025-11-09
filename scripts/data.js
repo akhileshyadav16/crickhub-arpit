@@ -41,11 +41,10 @@
     // 4. Default based on environment
     if (!apiBase) {
         if (isProduction) {
-            // Production: Try to get from window or use placeholder
-            // User must set this via meta tag or window.CRICKHUB_API_BASE
-            console.warn('[CrickHub] Production mode detected but API base URL not configured.');
-            console.warn('[CrickHub] Add this to your HTML: <meta name="crickhub-api-base" content="https://your-backend.railway.app/api">');
-            apiBase = 'https://your-backend.railway.app/api'; // Placeholder - user must update
+            // Production: Use same domain for API (Vercel same project)
+            const currentOrigin = window.location.origin;
+            apiBase = currentOrigin + '/api';
+            console.log('[CrickHub] Using same-origin API:', apiBase);
         } else {
             // Development: Use localhost
             apiBase = 'http://localhost:8000/api';

@@ -101,6 +101,9 @@ package-lock.json
 yarn.lock
 .pnpm-debug.log*
 
+# Build artifacts (keep source files)
+# build.js output is written to HTML files, which are committed
+
 # ============================================
 # Build & Distribution
 # ============================================

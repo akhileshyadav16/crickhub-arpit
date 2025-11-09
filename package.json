@@ -1,0 +1,10 @@
+{
+  "name": "crickhub",
+  "version": "1.0.0",
+  "description": "CrickHub - Cricket Analytics Portal",
+  "scripts": {
+    "build": "node build.js"
+  },
+  "devDependencies": {}
+}
+
